@@ -2,10 +2,12 @@
 
 const cp = require('child_process');
 
-console.info("Installing libsystemd-dev ...");
-
-const installed = cp.spawnSync('sudo', ['apt-get', 'install', '-qq', '--yes', 'libsystemd-dev']);
+const installed = cp.spawnSync('dpkg-query', ['-W', 'libsystemd-dev']);
 
 if (installed.status !== 0) {
-  throw new Error("libsystemd-dev must be installed.");
+  const install = cp.spawnSync('sudo', ['apt-get', 'install', '-q', '--yes', 'libsystemd-dev']);
+  
+  if (install.status !== 0) {
+    throw new Error("libsystemd-dev must be installed.");
+  }
 }
